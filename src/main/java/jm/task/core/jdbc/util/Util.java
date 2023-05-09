@@ -1,5 +1,10 @@
 package jm.task.core.jdbc.util;
 
+import jm.task.core.jdbc.model.User;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
 import java.sql.*;
 
 public class Util {
@@ -18,5 +23,13 @@ public class Util {
             e.printStackTrace();
         }
         return connection;
+    }
+
+    public static Session getSession() {
+        SessionFactory factory = new Configuration()
+                .addAnnotatedClass(User.class)
+                .buildSessionFactory();
+
+        return factory.getCurrentSession();
     }
 }
