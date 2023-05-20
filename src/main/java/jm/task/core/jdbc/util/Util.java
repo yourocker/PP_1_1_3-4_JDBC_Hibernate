@@ -7,7 +7,7 @@ public class Util {
     private static final String USERNAME = "root";
     private static final String PASS = "rootroot";
 
-    public static Connection getConnection() {
+    public Connection getConnection() {
         Connection connection = null;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
