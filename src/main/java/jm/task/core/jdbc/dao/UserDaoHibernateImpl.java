@@ -14,11 +14,13 @@ import java.util.List;
 public class UserDaoHibernateImpl extends Util implements UserDao {
     private Transaction transaction;
 
+//    Session SessionSingleton.getInstance().getSession() = SessionSingleton.getInstance().getSession();
+
     public UserDaoHibernateImpl() {
     }
 
     void transaction(String query, String message) {
-        try (Session session = getSession()) {
+        try (Session session = SessionSingleton.getInstance().getSession()) {
             session.beginTransaction();
             session.createSQLQuery(query).executeUpdate();
             session.getTransaction().commit();
@@ -42,7 +44,7 @@ public class UserDaoHibernateImpl extends Util implements UserDao {
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
-        try (Session session = getSession()) {
+        try (Session session = SessionSingleton.getInstance().getSession()) {
             transaction = session.beginTransaction();
             User user = new User(name, lastName, age);
             session.persist(user);
@@ -57,7 +59,7 @@ public class UserDaoHibernateImpl extends Util implements UserDao {
 
     @Override
     public void removeUserById(long id) {
-        try (Session session = getSession()) {
+        try (Session session = SessionSingleton.getInstance().getSession()) {
             transaction = session.beginTransaction();
             User user = session.get(User.class, id);
             if (user != null) {
@@ -75,7 +77,7 @@ public class UserDaoHibernateImpl extends Util implements UserDao {
     public List<User> getAllUsers() {
         List userList = new ArrayList<>();
 
-        try (Session session = getSession()) {
+        try (Session session = SessionSingleton.getInstance().getSession()) {
             transaction = session.beginTransaction();
             userList = session.createQuery("FROM User").getResultList();
             userList.forEach(System.out::println);
@@ -90,9 +92,9 @@ public class UserDaoHibernateImpl extends Util implements UserDao {
 
     @Override
     public void cleanUsersTable() {
-        try (Session session = getSession()) {
+        try (Session session = SessionSingleton.getInstance().getSession()) {
             session.beginTransaction();
-            session.createSQLQuery("DELETE FROM UsersTable").executeUpdate();
+            session.createQuery("DELETE FROM User").executeUpdate();
             session.getTransaction().commit();
         } catch (PersistenceException e) {
             System.err.println("Table clean exception");

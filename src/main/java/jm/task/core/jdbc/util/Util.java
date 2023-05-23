@@ -25,11 +25,33 @@ public class Util {
         return connection;
     }
 
-    public static Session getSession() {
-        SessionFactory factory = new Configuration()
-                .addAnnotatedClass(User.class)
-                .buildSessionFactory();
+    public static class SessionSingleton {
+        private static SessionSingleton instance = null;
+        private SessionFactory factory = null;
 
-        return factory.getCurrentSession();
+        private SessionSingleton() {
+            factory = new Configuration().
+                    addAnnotatedClass(User.class)
+                    .buildSessionFactory();
+        }
+
+        public static SessionSingleton getInstance() {
+            if (instance == null) {
+                instance = new SessionSingleton();
+            }
+            return instance;
+        }
+
+        public Session getSession() {
+            return factory.getCurrentSession();
+        }
     }
+//
+//    public static Session getSession() {
+//        SessionFactory factory = new Configuration()
+//                .addAnnotatedClass(User.class)
+//                .buildSessionFactory();
+//
+//        return factory.getCurrentSession();
+//    }
 }
